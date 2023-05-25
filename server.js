@@ -5,6 +5,7 @@ const app = express();
 const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('./config/ppConfig');
+const isLoggedIn = require('./middleware/isLoggedIn');
 
 //enviornment variables
 SECRET_SESSION = process.env.SECRET_SESSION
@@ -26,8 +27,8 @@ app.use(session({
 }));
 
 //add passport
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.initialize());      // Initialize passport
+app.use(passport.session());         // Add a session
 
 app.use((req, res, next) => {
   console.log(res.locals);
