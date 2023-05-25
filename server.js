@@ -45,6 +45,12 @@ app.get('/', (req, res) => {
 
 app.use('/auth', require('./controllers/auth'));
 
+// Add this above /auth controllers
+app.get('/profile', isLoggedIn, (req, res) => {
+  const { id, name, email } = req.user.get();
+  res.render('profile', { id, name, email });
+});
+
 const PORT = process.env.PORT || 3000;
 const server = app.listen(PORT, () => {
   console.log(`🎧 You're listening to the smooth sounds of port ${PORT} 🎧`);
