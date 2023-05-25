@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const passport = require('./config/ppConfig');
+const passport = require('../config/ppConfig');
 
 //import models
 const { user } = require('../models');
@@ -13,7 +13,22 @@ router.get("/login", (req, res) => {
   return res.render("auth/login");
 });
 
-module.exports = router;
+router.get('/logout', (req, res) => {
+  req.logOut(function (err, next) {
+    if (err) {
+      return next(err);
+    }
+    req.flash('success', 'Logging out... See you next time!');
+    res.redirect('/');
+  }); // logs the user out of the session
+});
+
+router.post('/login', passport.authenticate('local', {
+  successRedirect: '/',
+  failureRedirect: '/auth/login',
+  successFlash: 'Welcome back ...',
+  failureFlash: 'Either email or password is incorrect'
+}));
 
 router.post('/signup', async (req, res) => {
   // we now have access to the user info (req.body);
@@ -46,3 +61,5 @@ router.post('/signup', async (req, res) => {
     res.redirect('/auth/signup');
   }
 });
+
+module.exports = router;
